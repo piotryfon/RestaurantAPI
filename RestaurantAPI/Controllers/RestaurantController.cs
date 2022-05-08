@@ -22,5 +22,13 @@ namespace RestaurantAPI.Controllers
             var restaurants = _dbContext.Restaurants.ToList();
             return Ok(restaurants);
         }
+
+        [HttpGet("{id}")]
+        public ActionResult<Restaurant> GetById([FromRoute] int id)
+        {
+            var restaurant = _dbContext.Restaurants.FirstOrDefault(r => r.Id == id);
+            if (restaurant is null) return NotFound();
+            return Ok(restaurant);
+        }
     }
 }
