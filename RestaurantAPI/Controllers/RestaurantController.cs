@@ -43,5 +43,14 @@ namespace RestaurantAPI.Controllers
             var restaurantDto = _mapper.Map<RestaurantDto>(restaurant);
             return Ok(restaurantDto);
         }
+
+        [HttpPost]
+        public ActionResult CreateRestaurant([FromBody] CreateRestaurantDto dto)
+        {
+            var restaurant = _mapper.Map<Restaurant>(dto); // model dto na Restaurant
+            _dbContext.Restaurants.Add(restaurant);
+            _dbContext.SaveChanges();
+            return Created($"/api/restaurant/{restaurant.Id}", null); // zamiast null może być ciało odpowiedzi, w headerze odpowiedzi znajdzie się /api/restaurant/3
+        }
     }
 }
