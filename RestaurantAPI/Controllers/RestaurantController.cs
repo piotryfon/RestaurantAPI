@@ -22,7 +22,7 @@ namespace RestaurantAPI.Controllers
         public ActionResult<IEnumerable<RestaurantDto>> GetAll()
         {
             var restaurantsDtos = _restaurantService.GetAll();
-          
+
 
             return Ok(restaurantsDtos);
         }
@@ -50,7 +50,17 @@ namespace RestaurantAPI.Controllers
 
             var id = _restaurantService.Create(dto);
 
-            return Created($"/api/restaurants/{id}", null); // ścieżka do nowo utworzonego zasobu, drugi parametr zawiera body i jest opcjonalny
+            return Created($"/api/restaurants/{id}", null); // status 201 - ścieżka do nowo utworzonego zasobu, drugi parametr zawiera body i jest opcjonalny
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult Delete([FromRoute] int id)
+        {
+            var isDeleted = _restaurantService.Delete(id);
+
+            if (isDeleted) return NoContent(); // NoContent - 204
+
+            return NotFound();
         }
     }
 }
