@@ -10,6 +10,7 @@ using System.Linq;
 namespace RestaurantAPI.Controllers
 {
     [Route("api/restaurant")]
+    [ApiController]
     public class RestaurantController : ControllerBase
     {
         private readonly IRestaurantService _restaurantService;
@@ -37,11 +38,6 @@ namespace RestaurantAPI.Controllers
         [HttpPost]
         public ActionResult CreateRestaurant([FromBody] CreateRestaurantDto dto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var id = _restaurantService.Create(dto);
 
             return Created($"/api/restaurants/{id}", null); // status 201 - ścieżka do nowo utworzonego zasobu, drugi parametr zawiera body i jest opcjonalny
@@ -58,10 +54,6 @@ namespace RestaurantAPI.Controllers
         [HttpPut("{id}")]
         public ActionResult Update([FromBody] UpdateRestaurantDto dto, [FromRoute] int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
             _restaurantService.Update(id, dto);
 
             return Ok();
