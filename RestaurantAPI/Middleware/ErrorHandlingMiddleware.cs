@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using RestaurantAPI.Exceptions;
 
 namespace RestaurantAPI.Middleware
 {
@@ -18,11 +19,16 @@ namespace RestaurantAPI.Middleware
             {
                 await next.Invoke(context);
             }
-            catch(Exception e)
+            catch (NotFoundException notFoundException) // obsługuje Get w kontrolerze - nie trzeba sprawdzać czy istnieje takie id
+            {
+                context.Response.StatusCode = 404;
+                await context.Response.WriteAsync(notFoundException.Message);
+            }
+            catch (Exception e)
             {
                 _logger.LogError(e, e.Message);
 
-                context.Response.StatusCode = 500; //nadpisujemy odpowiedź dla kliwnta
+                context.Response.StatusCode = 500; //nadpisujemy odpowiedź dla klienta
                 await context.Response.WriteAsync("Something went wrong...");
             }
         }
