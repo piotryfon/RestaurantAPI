@@ -19,7 +19,7 @@ namespace RestaurantAPI.Middleware
             {
                 await next.Invoke(context);
             }
-            catch (NotFoundException notFoundException) // obsługuje Get w kontrolerze - nie trzeba sprawdzać czy istnieje takie id
+            catch (NotFoundException notFoundException) // jeżeli nie znajdzie id
             {
                 context.Response.StatusCode = 404;
                 await context.Response.WriteAsync(notFoundException.Message);
