@@ -16,6 +16,7 @@ namespace RestaurantAPI.Services
         DishDto GetById(int restaurantId, int dishId);
         List<DishDto> GetAll(int restaurantId);
         void RemoveAll(int restaurantId);
+        void RemoveById(int restaurantId, int dishId);
     }
     public class DishService : IDishService
     {
@@ -83,6 +84,17 @@ namespace RestaurantAPI.Services
             var restaurant = GetRestaurantById(restaurantId);
 
             _context.RemoveRange(restaurant.Dishes);
+            _context.SaveChanges();
+        }
+
+        public void RemoveById(int restaurantId, int dishId)
+        {
+            var restaurant = GetRestaurantById(restaurantId);
+
+            var dish = _context
+                .Dishes
+                .FirstOrDefault(d => d.Id == dishId);
+            _context.Dishes.Remove(dish);
             _context.SaveChanges();
         }
     }
