@@ -30,12 +30,7 @@ namespace RestaurantAPI.Services
 
         public int Create(int restaurantId, CreateDishDto dto)
         {
-            var restaurant = _context.Restaurants.FirstOrDefault(r => r.Id == restaurantId);
-
-            if (restaurant is null)
-            {
-                throw new NotFoundException("Restaurant not found.");
-            }
+            var restaurant = GetRestaurantById(restaurantId);
 
             var dishEntity = _mapper.Map<Dish>(dto); // mapujemy dto wysłane przez klienta do encji Dish
             dishEntity.RestaurantId = restaurantId;  // mapujemy ręcznie aby powiązać danie z restauracją
@@ -47,11 +42,7 @@ namespace RestaurantAPI.Services
 
         public DishDto GetById(int restaurantId, int dishId)
         {
-            var restaurant = _context.Restaurants.FirstOrDefault(r => r.Id == restaurantId);
-            if (restaurant is null)
-            {
-                throw new NotFoundException("Restaurant not found.");
-            }
+            var restaurant = GetRestaurantById(restaurantId);
 
             var dish = _context.Dishes.FirstOrDefault(d => d.Id == dishId);
             if (dish is null || dish.RestaurantId != restaurantId) // albo encja nie istnieje w bazie lub nie jest połączona z restauracją o którą odpytywał klient
@@ -65,12 +56,7 @@ namespace RestaurantAPI.Services
 
         public List<DishDto> GetAll(int restaurantId)
         {
-            var restaurant = _context
-                .Restaurants
-                .Include(r => r.Dishes)
-                .FirstOrDefault(r => r.Id == restaurantId);
-            if (restaurant is null)
-                throw new NotFoundException("Restaurant not found.");
+            var restaurant = GetRestaurantById(restaurantId);
 
             var dishDtos = _mapper.Map<List<DishDto>>(restaurant.Dishes);
 
@@ -83,8 +69,11 @@ namespace RestaurantAPI.Services
                .Restaurants
                .Include(r => r.Dishes)
                .FirstOrDefault(r => r.Id == restaurantId);
+
             if (restaurant is null)
+            {
                 throw new NotFoundException("Restaurant not found.");
+            }
 
             return restaurant;
         }
