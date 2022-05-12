@@ -1,27 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using RestaurantAPI.Entities;
 
 namespace RestaurantAPI
 {
     public class RestaurantSeeder
     {
-        private readonly RestaurantDbContext _dbContect;
+        private readonly RestaurantDbContext _dbContext;
         public RestaurantSeeder(RestaurantDbContext dbContext)
         {
-            _dbContect = dbContext;
+            _dbContext = dbContext;
         }
         public void Seed()
         {
-            if (_dbContect.Database.CanConnect()) //jeżeli połączenie do db może być nawiązane
+            if (_dbContext.Database.CanConnect()) //jeżeli połączenie do db może być nawiązane
             {
-                if (!_dbContect.Restaurants.Any())
+                if (!_dbContext.Restaurants.Any())
                 {
                     var restaurants = GetRestaurants();
-                    _dbContect.Restaurants.AddRange(restaurants);
-                    _dbContect.SaveChanges();
+                    _dbContext.Restaurants.AddRange(restaurants);
+                    _dbContext.SaveChanges();
+                }
+                if (!_dbContext.Roles.Any())
+                {
+                    var roles = GetRoles();
+                    _dbContext.Roles.AddRange(roles);
+                    _dbContext.SaveChanges();
                 }
             }
         }
@@ -86,9 +90,27 @@ namespace RestaurantAPI
                     }
                 }
             };
-
-
             return restaurants;
+        }
+
+        private IEnumerable<Role> GetRoles()
+        {
+            var roles = new List<Role>()
+            {
+                new Role()
+                {
+                    Name = "User"
+                },
+                new Role()
+                {
+                    Name = "Manager"
+                },
+                new Role()
+                {
+                    Name = "Admin"
+                }
+            };
+            return roles;
         }
     }
 }
