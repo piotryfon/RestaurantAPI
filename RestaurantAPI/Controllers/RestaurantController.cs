@@ -1,11 +1,8 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using RestaurantAPI.Entities;
+﻿using Microsoft.AspNetCore.Mvc;
 using RestaurantAPI.Models;
 using RestaurantAPI.Services;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading;
 
 namespace RestaurantAPI.Controllers
 {
@@ -23,7 +20,7 @@ namespace RestaurantAPI.Controllers
         public ActionResult<IEnumerable<RestaurantDto>> GetAll()
         {
             var restaurantsDtos = _restaurantService.GetAll();
-
+            //Thread.Sleep(4000);
             return Ok(restaurantsDtos);
         }
 
