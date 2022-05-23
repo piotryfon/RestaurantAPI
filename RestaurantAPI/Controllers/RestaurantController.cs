@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RestaurantAPI.Models;
 using RestaurantAPI.Services;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ namespace RestaurantAPI.Controllers
 {
     [Route("api/restaurant")]
     [ApiController]
+    [Authorize]//wymagaj autoryzacji
     public class RestaurantController : ControllerBase
     {
         private readonly IRestaurantService _restaurantService;
@@ -25,6 +27,7 @@ namespace RestaurantAPI.Controllers
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]//zezwól bez autoryzacji
         public ActionResult<RestaurantDto> Get([FromRoute] int id)
         {
             var restaurant = _restaurantService.GetById(id);
