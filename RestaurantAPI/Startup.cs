@@ -52,7 +52,7 @@ namespace RestaurantAPI
             //dodanie w³asnej polityki której celem jest sprawdzenie czy claim istnieje
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("HasNationality", builder => builder.RequireClaim("Nationality"));
+                options.AddPolicy("HasNationality", builder => builder.RequireClaim("Nationality","Polska"));
             });
             services.AddControllers().AddFluentValidation();
             services.AddDbContext<RestaurantDbContext>();
