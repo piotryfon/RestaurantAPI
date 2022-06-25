@@ -9,7 +9,7 @@ namespace RestaurantAPI.Controllers
 {
     [Route("api/restaurant")]
     [ApiController]
-    [Authorize]//wymagaj autoryzacji
+    [Authorize]//wymagaj nagłówka autoryzacji
     public class RestaurantController : ControllerBase
     {
         private readonly IRestaurantService _restaurantService;
@@ -19,7 +19,10 @@ namespace RestaurantAPI.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = "HasNationality")] // nazwa polityki jak w klasie startap
+        //[AllowAnonymous]
+        //[Authorize(Policy = "HasNationality")]
+        //[Authorize(Roles = "Admin,Manager")]
+        [Authorize(Policy = "Atleast20")] // nazwa polityki jak w klasie startap
         public ActionResult<IEnumerable<RestaurantDto>> GetAll()
         {
             var restaurantsDtos = _restaurantService.GetAll();
@@ -28,7 +31,8 @@ namespace RestaurantAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        [AllowAnonymous]//zezwól bez autoryzacji
+        //[AllowAnonymous]//zezwól bez autoryzacji
+        [Authorize(Policy = "Atleast20")] // nazwa polityki jak w klasie startap
         public ActionResult<RestaurantDto> Get([FromRoute] int id)
         {
             var restaurant = _restaurantService.GetById(id);

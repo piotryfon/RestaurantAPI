@@ -54,6 +54,11 @@ namespace RestaurantAPI.Services
                 .Include(r => r.Dishes)
                 .ToList();
 
+            if (restaurants is null)
+            {
+                throw new NotFoundException("Restaurants not found");
+            }
+
             // AutoMapper.Extensions.Microsoft.DependencyInjection _mapper.Map<List<typ na który chcemy zmapować>>(źródło z którego mapujemy);
             var restaurantsDtos = _mapper.Map<List<RestaurantDto>>(restaurants);
             return restaurantsDtos;

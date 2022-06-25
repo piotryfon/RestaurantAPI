@@ -52,7 +52,7 @@ namespace RestaurantAPI.Services
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
                 new Claim(ClaimTypes.Role, $"{user.Role.Name}"), //umożliwia zastosowanie atrybutu Authorize z kontrolerze
-                new Claim("DateOfBirth", user.DateOfBirth.Value.ToString("yyyy-MM-DD")),
+                new Claim("DateOfBirth", user.DateOfBirth.Value.ToString("yyyy-MM-dd")),
             };
             if (!string.IsNullOrEmpty(user.Nationality))// autoryzacja wartością claimu
             {
