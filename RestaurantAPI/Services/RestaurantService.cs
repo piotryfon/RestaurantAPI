@@ -14,9 +14,9 @@ namespace RestaurantAPI.Services
 {
     public interface IRestaurantService //  twozymy interface aby zarejestrować go w startap w configureServices, dzięki temu możemy wstrzyknąć go do kontrolera
     {
-        int Create(CreateRestaurantDto dto, int userId);
-        IEnumerable<RestaurantDto> GetAll();
         RestaurantDto GetById(int id);
+        IEnumerable<RestaurantDto> GetAll();
+        int Create(CreateRestaurantDto dto, int userId);      
         void Delete(int id, ClaimsPrincipal user);
         void Update(int id, UpdateRestaurantDto dto, ClaimsPrincipal user);
     }
@@ -126,11 +126,6 @@ namespace RestaurantAPI.Services
 
             _dbContext.SaveChanges();
            
-        }
-
-        public void Update(int id, UpdateRestaurantDto dto)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }
