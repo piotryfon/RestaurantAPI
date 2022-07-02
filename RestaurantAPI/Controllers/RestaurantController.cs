@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RestaurantAPI.Models;
 using RestaurantAPI.Services;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading;
 
 namespace RestaurantAPI.Controllers
@@ -44,7 +45,8 @@ namespace RestaurantAPI.Controllers
         [Authorize(Roles ="Admin,Manager")]
         public ActionResult CreateRestaurant([FromBody] CreateRestaurantDto dto)
         {
-            var id = _restaurantService.Create(dto);
+            var UserId = int.Parse(User.FindFirst(claim => claim.Type == ClaimTypes.NameIdentifier).Value);
+            var id = _restaurantService.Create(dto, UserId);
 
             return Created($"/api/restaurants/{id}", null); // status 201 - ścieżka do nowo utworzonego zasobu, drugi parametr zawiera body i jest opcjonalny
         }
