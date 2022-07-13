@@ -15,7 +15,7 @@ namespace RestaurantAPI.Services
     public interface IRestaurantService //  twozymy interface aby zarejestrować go w startap w configureServices, dzięki temu możemy wstrzyknąć go do kontrolera
     {
         RestaurantDto GetById(int id);
-        IEnumerable<RestaurantDto> GetAll();
+        IEnumerable<RestaurantDto> GetAll(string searhPhrase);
         int Create(CreateRestaurantDto dto);      
         void Delete(int id);
         void Update(int id, UpdateRestaurantDto dto);
@@ -60,12 +60,13 @@ namespace RestaurantAPI.Services
             return result;
         }
 
-        public IEnumerable<RestaurantDto> GetAll()
+        public IEnumerable<RestaurantDto> GetAll(string searchPhrase)
         {
             var restaurants = _dbContext
                 .Restaurants
                 .Include(r => r.Address) // dołączamy odpowiednie tabele do wyników zapytania
                 .Include(r => r.Dishes)
+                .Where(r => r.Name.ToLower().Contains(searchPhrase.ToLower()) || r.Description.ToLower().Contains(searchPhrase.ToLower()))
                 .ToList();
 
             if (restaurants is null)
