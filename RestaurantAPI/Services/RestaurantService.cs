@@ -66,7 +66,9 @@ namespace RestaurantAPI.Services
                 .Restaurants
                 .Include(r => r.Address) // dołączamy odpowiednie tabele do wyników zapytania
                 .Include(r => r.Dishes)
-                .Where(r => r.Name.ToLower().Contains(searchPhrase.ToLower()) || r.Description.ToLower().Contains(searchPhrase.ToLower()))
+                .Where(r => 
+                    searchPhrase == null || 
+                    (r.Name.ToLower().Contains(searchPhrase.ToLower()) || r.Description.ToLower().Contains(searchPhrase.ToLower())))
                 .ToList();
 
             if (restaurants is null)
