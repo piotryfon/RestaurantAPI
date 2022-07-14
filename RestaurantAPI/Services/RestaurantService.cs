@@ -15,7 +15,7 @@ namespace RestaurantAPI.Services
     public interface IRestaurantService //  twozymy interface aby zarejestrować go w startap w configureServices, dzięki temu możemy wstrzyknąć go do kontrolera
     {
         RestaurantDto GetById(int id);
-        IEnumerable<RestaurantDto> GetAll(RestaurantQuery query);
+        PagedResult<RestaurantDto> GetAll(RestaurantQuery query);
         int Create(CreateRestaurantDto dto);      
         void Delete(int id);
         void Update(int id, UpdateRestaurantDto dto);
@@ -60,27 +60,28 @@ namespace RestaurantAPI.Services
             return result;
         }
 
-        public IEnumerable<RestaurantDto> GetAll(RestaurantQuery query)
+        public PagedResult<RestaurantDto> GetAll(RestaurantQuery query)
         {
-            var restaurants = _dbContext
+            var baseQuery = _dbContext
                 .Restaurants
-                .Include(r => r.Address) // dołączamy odpowiednie tabele do wyników zapytania
+                .Include(r => r.Address)
                 .Include(r => r.Dishes)
-                .Where(r => 
-                    query.searchPhrase == null || 
-                    (r.Name.ToLower().Contains(query.searchPhrase.ToLower()) || r.Description.ToLower().Contains(query.searchPhrase.ToLower())))
+                .Where(r => query.searchPhrase == null ||
+                    (r.Name.ToLower().Contains(query.searchPhrase.ToLower()) || r.Description.ToLower().Contains(query.searchPhrase.ToLower())));
+
+            var restaurants = baseQuery
                 .Skip(query.PageSize * (query.PageNumber - 1))
                 .Take(query.PageSize)
                 .ToList();
 
-            if (restaurants is null)
-            {
-                throw new NotFoundException("Restaurants not found");
-            }
+            var totalItemsCount = baseQuery.Count();
 
             // AutoMapper.Extensions.Microsoft.DependencyInjection _mapper.Map<List<typ na który chcemy zmapować>>(źródło z którego mapujemy);
             var restaurantsDtos = _mapper.Map<List<RestaurantDto>>(restaurants);
-            return restaurantsDtos;
+
+            var result = new PagedResult<RestaurantDto>(restaurantsDtos, totalItemsCount, query.PageSize, query.PageNumber);
+
+            return result;
         }
 
         public int Create(CreateRestaurantDto dto)
