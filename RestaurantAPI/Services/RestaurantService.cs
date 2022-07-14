@@ -69,6 +69,8 @@ namespace RestaurantAPI.Services
                 .Where(r => 
                     query.searchPhrase == null || 
                     (r.Name.ToLower().Contains(query.searchPhrase.ToLower()) || r.Description.ToLower().Contains(query.searchPhrase.ToLower())))
+                .Skip(query.PageSize * (query.PageNumber - 1))
+                .Take(query.PageSize)
                 .ToList();
 
             if (restaurants is null)
