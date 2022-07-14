@@ -24,9 +24,9 @@ namespace RestaurantAPI.Controllers
         //[Authorize(Policy = "HasNationality")]
         //[Authorize(Roles = "Admin,Manager")]
         [Authorize(Policy = "Atleast20")] // nazwa polityki jak w klasie startap
-        public ActionResult<IEnumerable<RestaurantDto>> GetAll([FromQuery]string searchPhrase)
+        public ActionResult<IEnumerable<RestaurantDto>> GetAll([FromQuery]RestaurantQuery query)
         {
-            var restaurantsDtos = _restaurantService.GetAll(searchPhrase);
+            var restaurantsDtos = _restaurantService.GetAll(query);
             //Thread.Sleep(4000);
             return Ok(restaurantsDtos);
         }
