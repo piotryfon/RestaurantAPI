@@ -60,7 +60,7 @@ namespace RestaurantAPI
 
             services.AddScoped<IAuthorizationHandler, MinimumAgeRequirementHandler>();
             services.AddScoped<IAuthorizationHandler, ResourceOperationRequirementHandler>();
-            services.AddControllers().AddFluentValidation();
+            services.AddControllers().AddFluentValidation(); // powoduje wywo³anie odpowiedniego walidatora z folderu Validators
             services.AddDbContext<RestaurantDbContext>();
             services.AddScoped<RestaurantSeeder>();
             services.AddAutoMapper(this.GetType().Assembly);
@@ -69,7 +69,8 @@ namespace RestaurantAPI
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ErrorHandlingMiddleware>();
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-            services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
+            services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>(); // rejestracja walidatora
+            services.AddScoped<IValidator<RestaurantQuery>, RestaurantQueryValidator>(); // rejestracja walidatora
             services.AddScoped<RequestTimeMiddleware>();
             services.AddSwaggerGen(); //Swashbuckle.AspNetCore
             services.AddScoped<IUserContextService, UserContextService>();
